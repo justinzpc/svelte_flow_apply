@@ -2,6 +2,7 @@
 	import { Card } from 'flowbite-svelte';
 	import type { ApplicationType } from '$lib/types/application';
 	import { APPLICATION_TYPES } from '$lib/types/application';
+	import { t } from '$lib/i18n/index.svelte';
 
 	interface Props {
 		selected?: ApplicationType;
@@ -32,8 +33,8 @@
 						🛒
 					{/if}
 				</div>
-				<h3 class="text-lg font-bold text-gray-900 dark:text-white">{type.label}</h3>
-				<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{type.description}</p>
+				<h3 class="text-lg font-bold text-gray-900 dark:text-white">{t('type.' + type.value)}</h3>
+				<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{t('typedesc.' + type.value)}</p>
 			</div>
 		</Card>
 	{/each}

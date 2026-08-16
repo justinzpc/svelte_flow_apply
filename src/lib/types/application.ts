@@ -102,11 +102,11 @@ export const APPLICATION_TYPES: ApplicationTypeConfig[] = [
 
 // 状态配置
 export const STATUS_CONFIG: Record<ApplicationStatus, StatusConfig> = {
-	draft: { value: 'draft', label: '草稿', color: 'dark' },
-	pending: { value: 'pending', label: '待审批', color: 'yellow' },
-	approved: { value: 'approved', label: '已通过', color: 'green' },
-	rejected: { value: 'rejected', label: '已驳回', color: 'red' },
-	cancelled: { value: 'cancelled', label: '已取消', color: 'purple' }
+	draft: { value: 'draft', label: 'draft', color: 'dark' },
+	pending: { value: 'pending', label: 'pending', color: 'yellow' },
+	approved: { value: 'approved', label: 'approved', color: 'green' },
+	rejected: { value: 'rejected', label: 'rejected', color: 'red' },
+	cancelled: { value: 'cancelled', label: 'cancelled', color: 'purple' }
 };
 
 // 类型根据 content 判断

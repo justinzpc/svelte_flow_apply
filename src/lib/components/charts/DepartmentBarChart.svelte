@@ -2,6 +2,7 @@
 	import * as echarts from 'echarts';
 	import type { Application, ApplicationType } from '$lib/types/application';
 	import { departments, getUserById } from '$lib/data/mock';
+	import { t } from '$lib/i18n/index.svelte';
 
 	interface Props {
 		applications: Application[];
@@ -20,9 +21,9 @@
 		const deptNames = departments.map((d) => d.name);
 		const types: ApplicationType[] = ['overtime', 'travel', 'procurement'];
 		const typeLabels: Record<ApplicationType, string> = {
-			overtime: '加班申请',
-			travel: '差旅申请',
-			procurement: '采购申请'
+			overtime: t('type.overtime'),
+			travel: t('type.travel'),
+			procurement: t('type.procurement')
 		};
 		const typeColors = ['#3B82F6', '#10B981', '#F59E0B'];
 
@@ -45,7 +46,7 @@
 			legend: { bottom: 0 },
 			grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
 			xAxis: { type: 'category', data: deptNames },
-			yAxis: { type: 'value', name: '申请数量' },
+			yAxis: { type: 'value', name: t('reports.totalApplications') },
 			series
 		});
 

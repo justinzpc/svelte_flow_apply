@@ -2,6 +2,7 @@
 	import * as echarts from 'echarts';
 	import type { ApplicationStatus } from '$lib/types/application';
 	import { STATUS_CONFIG } from '$lib/types/application';
+	import { t } from '$lib/i18n/index.svelte';
 
 	interface Props {
 		data: Record<ApplicationStatus, number>;
@@ -35,9 +36,9 @@
 					center: ['50%', '45%'],
 					avoidLabelOverlap: false,
 					itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-					label: { show: true, formatter: '{b}\n{c}件' },
+					label: { show: true, formatter: '{b}\n{c}' },
 					data: entries.map(([key, value]) => ({
-						name: STATUS_CONFIG[key as ApplicationStatus].label,
+						name: t('status.' + STATUS_CONFIG[key as ApplicationStatus].label),
 						value,
 						itemStyle: { color: colorMap[key] }
 					}))
