@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+
+/* Flowbite plugin */
+@plugin "flowbite/plugin";
+
+/* Scan flowbite-svelte for Tailwind classes */
+@source "../../node_modules/flowbite-svelte/dist";
+
+/* Primary color palette (mapped to blue) */
+@theme {
+	--color-primary-50: oklch(97% 0.014 254.604);
+	--color-primary-100: oklch(93.2% 0.032 255.585);
+	--color-primary-200: oklch(88.2% 0.059 254.128);
+	--color-primary-300: oklch(80.9% 0.105 251.812);
+	--color-primary-400: oklch(70.7% 0.165 254.624);
+	--color-primary-500: oklch(62.3% 0.214 259.815);
+	--color-primary-600: oklch(54.6% 0.245 262.881);
+	--color-primary-700: oklch(48.8% 0.243 264.376);
+	--color-primary-800: oklch(42.4% 0.199 265.638);
+	--color-primary-900: oklch(37.9% 0.146 265.522);
+}
+
+/* Dark mode variant */
+@custom-variant dark (&:is(.dark *));
+
+/* Remove borders from flowbite-svelte components, keep box-shadow */
+@layer utilities {
+	.border, .border-2, .border-4, .border-8 {
+		border-width: 0;
+	}
+	.border-t, .border-t-2, .border-t-4, .border-t-8 {
+		border-top-width: 0;
+	}
+	.border-b, .border-b-2, .border-b-4, .border-b-8 {
+		border-bottom-width: 0;
+	}
+	.border-l, .border-l-2, .border-l-4, .border-l-8 {
+		border-left-width: 0;
+	}
+	.border-r, .border-r-2, .border-r-4, .border-r-8 {
+		border-right-width: 0;
+	}
+	.border-x, .border-x-2, .border-x-4, .border-x-8 {
+		border-left-width: 0;
+		border-right-width: 0;
+	}
+	.border-y, .border-y-2, .border-y-4, .border-y-8 {
+		border-top-width: 0;
+		border-bottom-width: 0;
+	}
+}
