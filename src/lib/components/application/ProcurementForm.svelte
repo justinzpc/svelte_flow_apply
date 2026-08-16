@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button, Input, Label, Textarea } from 'flowbite-svelte';
 	import type { ProcurementContent, ProcurementItem } from '$lib/types/application';
+	import { t } from '$lib/i18n/index.svelte';
 
 	interface Props {
 		content: ProcurementContent;
@@ -33,28 +34,28 @@
 </script>
 
 <div class="space-y-4">
-	<h3 class="text-lg font-semibold text-gray-900 dark:text-white">采购信息</h3>
+	<h3 class="text-lg font-semibold text-gray-900 dark:text-white">{t('form.procurementInfo')}</h3>
 
 	<!-- 物品列表 -->
 	<div class="space-y-3">
 		<div class="flex items-center justify-between">
-			<h4 class="font-medium text-gray-700 dark:text-gray-300">采购物品清单</h4>
-			<Button size="xs" color="blue" onclick={addItem}>添加物品</Button>
+			<h4 class="font-medium text-gray-700 dark:text-gray-300">{t('form.procurementList')}</h4>
+			<Button size="xs" color="blue" onclick={addItem}>{t('form.addItem')}</Button>
 		</div>
 
 		{#each content.items as item, index}
 			<div class="grid grid-cols-12 items-end gap-2 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
 				<div class="col-span-5">
-					<Label for="item-name-{index}" class="mb-1">物品名称</Label>
+					<Label for="item-name-{index}" class="mb-1">{t('form.itemName')}</Label>
 					<Input
 						id="item-name-{index}"
 						value={item.name}
 						oninput={(e) => updateItem(index, 'name', e.currentTarget.value)}
-						placeholder="物品名称"
+						placeholder={t('form.itemNamePlaceholder')}
 					/>
 				</div>
 				<div class="col-span-2">
-					<Label for="item-qty-{index}" class="mb-1">数量</Label>
+					<Label for="item-qty-{index}" class="mb-1">{t('form.quantity')}</Label>
 					<Input
 						id="item-qty-{index}"
 						type="number"
@@ -64,7 +65,7 @@
 					/>
 				</div>
 				<div class="col-span-3">
-					<Label for="item-price-{index}" class="mb-1">单价（元）</Label>
+					<Label for="item-price-{index}" class="mb-1">{t('form.unitPrice')}</Label>
 					<Input
 						id="item-price-{index}"
 						type="number"
@@ -74,32 +75,32 @@
 					/>
 				</div>
 				<div class="col-span-2">
-					<Button size="xs" color="red" onclick={() => removeItem(index)}>删除</Button>
+					<Button size="xs" color="red" onclick={() => removeItem(index)}>{t('form.delete')}</Button>
 				</div>
 			</div>
 		{/each}
 
 		{#if content.items.length === 0}
-			<p class="text-center text-sm text-gray-500 dark:text-gray-400">暂无物品，请点击"添加物品"按钮</p>
+			<p class="text-center text-sm text-gray-500 dark:text-gray-400">{t('form.noItems')}</p>
 		{/if}
 	</div>
 
 	<!-- 总预算 -->
 	<div class="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
 		<p class="text-sm text-gray-600 dark:text-gray-400">
-			总预算：<span class="text-lg font-bold text-gray-900 dark:text-white">¥{content.totalBudget.toFixed(2)}</span>
+			{t('form.totalBudget')}：<span class="text-lg font-bold text-gray-900 dark:text-white">¥{content.totalBudget.toFixed(2)}</span>
 		</p>
 	</div>
 
 	<!-- 采购用途 -->
 	<div>
-		<Label for="procurement-purpose" class="mb-2">采购用途</Label>
+		<Label for="procurement-purpose" class="mb-2">{t('form.procurementPurpose')}</Label>
 		<Textarea
 			id="procurement-purpose"
 			rows={3}
 			value={content.purpose}
 			oninput={(e) => updatePurpose(e.currentTarget.value)}
-			placeholder="请说明采购用途..."
+			placeholder={t('form.procurementPurposePlaceholder')}
 		/>
 	</div>
 </div>

@@ -20,6 +20,7 @@
  import FormIcon from '$lib/components/icons/FormIcon.svelte';
  import PreviewIcon from '$lib/components/icons/PreviewIcon.svelte';
  import CheckIcon from '$lib/components/icons/CheckIcon.svelte';
+ import {t} from '$lib/i18n/index.svelte';
 
  type Step = 'type' | 'form' | 'preview' | 'success';
 
@@ -105,21 +106,21 @@
   currentStep === 'type' ? 1 : currentStep === 'form' ? 2 : currentStep === 'preview' ? 3 : 4
  );
 
- const steps = [
-  {label: '选择类型', shortLabel: '', icon: TypeIcon},
-  {label: '填写表单', shortLabel: '', icon: FormIcon},
-  {label: '预览确认', shortLabel: '', icon: PreviewIcon},
-  {label: '完成', shortLabel: '', icon: CheckIcon}
- ];
+ const steps = $derived([
+  {label: t('apply.step.type'), shortLabel: '', icon: TypeIcon},
+  {label: t('apply.step.form'), shortLabel: '', icon: FormIcon},
+  {label: t('apply.step.preview'), shortLabel: '', icon: PreviewIcon},
+  {label: t('apply.step.success'), shortLabel: '', icon: CheckIcon}
+ ]);
 </script>
 <svelte:head>
-	<title>发起申请 - 申请管理系统</title>
+	<title>{t('apply.pageTitle')}</title>
 </svelte:head>
 <div class="mx-auto bg-white p-6 space-y-8">
 	<!-- 页面标题 -->
 	<div>
-		<h1 class="text-3xl font-bold text-gray-900 dark:text-white">发起申请</h1>
-		<p class="mt-2 text-gray-600 dark:text-gray-400">创建新的申请并提交审批</p>
+		<h1 class="text-3xl font-bold text-gray-900 dark:text-white">{t('apply.title')}</h1>
+		<p class="mt-2 text-gray-600 dark:text-gray-400">{t('apply.subtitle')}</p>
 	</div>
 	<!-- 步骤指示器 -->
 	<Stepper {steps} current={stepIndex} clickable={false} classes={{content: 'whitespace-nowrap'}}/>
@@ -127,10 +128,10 @@
 	{#if currentStep === 'type'}
 		<!-- 步骤1：选择申请类型 -->
 		<div>
-			<h2 class="mb-6 text-xl font-semibold text-gray-900 dark:text-white">请选择申请类型</h2>
+			<h2 class="mb-6 text-xl font-semibold text-gray-900 dark:text-white">{t('apply.selectType')}</h2>
 			<TypeSelector selected={selectedType} onselect={selectType}/>
 			<div class="mt-6 flex justify-end">
-				<Button color="blue" disabled={!selectedType} onclick={goToForm}>下一步</Button>
+				<Button color="blue" disabled={!selectedType} onclick={goToForm}>{t('apply.next')}</Button>
 			</div>
 		</div>
 	{:else if currentStep === 'form'}
@@ -143,12 +144,12 @@
 			<!-- 申请标题 -->
 			<form id="section-title" class="w-full bg-white rounded-lg shadow-lg p-6">
 				<div class="space-y-4">
-					<h3 class="text-lg font-semibold text-gray-900 dark:text-white">申请标题</h3>
-					<Label for="app-title">标题</Label>
+					<h3 class="text-lg font-semibold text-gray-900 dark:text-white">{t('apply.appTitle')}</h3>
+					<Label for="app-title">{t('apply.titleLabel')}</Label>
 					<Input
 					 id="app-title"
 					 bind:value={title}
-					 placeholder="请输入申请标题"
+					 placeholder={t('apply.titlePlaceholder')}
 					/>
 				</div>
 			</form>
@@ -172,11 +173,12 @@
 				{/if}
 			</form>
 			<div class="flex justify-between">
-				<Button color="alternative" onclick={() => currentStep = 'type'}>上一步</Button>
+				<Button color="alternative" onclick={() => currentStep = 'type'}>{t('apply.prev')}</Button>
 				<div class="flex gap-3">
-					<Button color="dark" onclick={handleSaveDraft} disabled={!title.trim()}>保存草稿</Button>
-					<Button color="green" onclick={() => showConfirmDialog = true} disabled={!title.trim()}>提交申请</Button>
-					<Button color="blue" onclick={goToPreview} disabled={!title.trim()}>预览</Button>
+					<Button color="dark" onclick={handleSaveDraft} disabled={!title.trim()}>{t('apply.saveDraft')}</Button>
+					<Button color="green" onclick={() => showConfirmDialog = true}
+					 disabled={!title.trim()}>{t('apply.submitApplication')}</Button>
+					<Button color="blue" onclick={goToPreview} disabled={!title.trim()}>{t('apply.preview')}</Button>
 				</div>
 			</div>
 		</div>
@@ -184,13 +186,14 @@
 		{#if showConfirmDialog}
 			<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 				<Card class="w-full max-w-md">
-					<h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">确认提交申请</h3>
+					<h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">{t('apply.confirmTitle')}</h3>
 					<p class="mb-6 text-sm text-gray-500 dark:text-gray-400">
-						确定要提交「{title}」吗？提交后将进入审批流程。
+						{t('apply.confirmMessage', {title})}
 					</p>
 					<div class="flex justify-end gap-3">
-						<Button color="alternative" onclick={() => showConfirmDialog = false}>取消</Button>
-						<Button color="blue" onclick={() => { showConfirmDialog = false; handleSubmit(); }}>确认提交</Button>
+						<Button color="alternative" onclick={() => showConfirmDialog = false}>{t('common.cancel')}</Button>
+						<Button color="blue"
+						 onclick={() => { showConfirmDialog = false; handleSubmit(); }}>{t('apply.confirmSubmit')}</Button>
 					</div>
 				</Card>
 			</div>
@@ -199,9 +202,9 @@
 		<!-- 步骤3：预览确认 -->
 		<div class="space-y-6">
 			<Card>
-				<h2 class="mb-4 text-xl font-semibold text-gray-900 dark:text-white">请确认申请信息</h2>
+				<h2 class="mb-4 text-xl font-semibold text-gray-900 dark:text-white">{t('apply.previewTitle')}</h2>
 				<p class="mb-6 text-sm text-gray-500 dark:text-gray-400">
-					请仔细核对以下信息，如有错误请点击对应区域的"修改"按钮进行更正。
+					{t('apply.previewSubtitle')}
 				</p>
 			</Card>
 			{#if selectedType && content}
@@ -215,8 +218,8 @@
 			{/if}
 			<!-- 操作按钮 -->
 			<div class="flex justify-between">
-				<Button color="alternative" onclick={() => currentStep = 'form'}>返回修改</Button>
-				<Button color="blue" onclick={handleSubmit}>确认提交</Button>
+				<Button color="alternative" onclick={() => currentStep = 'form'}>{t('apply.backToEdit')}</Button>
+				<Button color="blue" onclick={handleSubmit}>{t('apply.confirmSubmit')}</Button>
 			</div>
 		</div>
 	{:else if currentStep === 'success'}
@@ -224,13 +227,13 @@
 		<Card class="text-center">
 			<div class="py-8">
 				<div class="mb-4 text-6xl text-green-500">&#10003;</div>
-				<h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">申请提交成功！</h2>
+				<h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">{t('apply.successTitle')}</h2>
 				<p class="mb-8 text-gray-600 dark:text-gray-400">
-					您的申请已成功提交，等待审批中。
+					{t('apply.successMessage')}
 				</p>
 				<div class="flex justify-center gap-4">
-					<Button color="blue" onclick={() => goto('/applications/my')}>查看我的申请</Button>
-					<Button color="alternative" onclick={reset}>继续申请</Button>
+					<Button color="blue" onclick={() => goto('/applications/my')}>{t('apply.viewMyApplications')}</Button>
+					<Button color="alternative" onclick={reset}>{t('apply.continueApply')}</Button>
 				</div>
 			</div>
 		</Card>

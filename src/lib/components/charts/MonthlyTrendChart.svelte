@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as echarts from 'echarts';
 	import type { Application } from '$lib/types/application';
+	import { t } from '$lib/i18n/index.svelte';
 
 	interface Props {
 		applications: Application[];
@@ -34,7 +35,7 @@
 				data: sortedMonths,
 				axisLabel: { rotate: 30 }
 			},
-			yAxis: { type: 'value', name: '申请数量', minInterval: 1 },
+			yAxis: { type: 'value', name: t('reports.totalApplications'), minInterval: 1 },
 			series: [
 				{
 					type: 'line',

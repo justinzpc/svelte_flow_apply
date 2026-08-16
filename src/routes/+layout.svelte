@@ -1,18 +1,24 @@
 <script lang="ts">
  import './layout.css';
  import {page} from '$app/stores';
+ import {afterNavigate} from '$app/navigation';
  import {Breadcrumb, BreadcrumbItem, Dropdown, DropdownItem} from 'flowbite-svelte';
  import {currentUser} from '$lib/data/mock';
+ import {initLocale, t, getLocale, setLocale, type Locale} from '$lib/i18n/index.svelte';
 
  let {children} = $props();
 
- const navItems = [
-  {href: '/', label: '仪表盘', icon: 'home'},
-  {href: '/apply', label: '发起申请', icon: 'plus-circle'},
-  {href: '/applications/my', label: '我的申请', icon: 'document-text'},
-  {href: '/applications', label: '所有申请', icon: 'clipboard-list'},
-  {href: '/reports', label: '统计报表', icon: 'chart-bar'}
- ];
+ afterNavigate(() => {
+  initLocale();
+ });
+
+ let navItems = $derived([
+  {href: '/', label: t('nav.dashboard'), icon: 'home'},
+  {href: '/apply', label: t('nav.apply'), icon: 'plus-circle'},
+  {href: '/applications/my', label: t('nav.myApplications'), icon: 'document-text'},
+  {href: '/applications', label: t('nav.allApplications'), icon: 'clipboard-list'},
+  {href: '/reports', label: t('nav.reports'), icon: 'chart-bar'}
+ ]);
 
  function isActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/';
@@ -34,9 +40,18 @@
 
  let currentPage = $derived($page.url.pathname);
  let breadcrumbTitle = $derived(getBreadcrumb(currentPage));
+
+ const languageOptions: {value: Locale; label: string}[] = [
+  {value: 'zh', label: '中文'},
+  {value: 'en', label: 'English'}
+ ];
+
+ function handleLanguageChange(lang: Locale) {
+  setLocale(lang);
+ }
 </script>
 <svelte:head>
-	<title>申请流程管理系统</title>
+	<title>{t('nav.systemName')}</title>
 </svelte:head>
 <div class="flex min-h-screen bg-gray-50 dark:bg-gray-900">
 	<!-- 左侧边栏 -->
@@ -50,7 +65,7 @@
 					 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
 				</svg>
 			</div>
-			<span class="text-lg font-bold text-gray-900 dark:text-white">申请管理系统</span>
+			<span class="text-lg font-bold text-gray-900 dark:text-white">{t('nav.systemName')}</span>
 		</div>
 		<!-- 导航菜单 -->
 		<nav class="space-y-1 px-3 py-4">
@@ -103,7 +118,7 @@
 				<div class="flex-1 overflow-hidden">
 					<p class="truncate text-sm font-medium text-gray-900 dark:text-white">{currentUser.name}</p>
 					<p
-					 class="truncate text-xs text-gray-500 dark:text-gray-400">{currentUser.role === 'admin' ? '管理员' : '普通用户'}</p>
+					 class="truncate text-xs text-gray-500 dark:text-gray-400">{currentUser.role === 'admin' ? t('nav.admin') : t('nav.user')}</p>
 				</div>
 			</div>
 		</div>
@@ -115,7 +130,7 @@
 		 class="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200 bg-white px-6 dark:border-gray-700 dark:bg-gray-800">
 			<!-- 面包屑 -->
 			<Breadcrumb class="flex-1">
-				<BreadcrumbItem href="/" home>首页</BreadcrumbItem>
+				<BreadcrumbItem href="/" home>{t('nav.home')}</BreadcrumbItem>
 				{#if breadcrumbTitle}
 					<BreadcrumbItem>{breadcrumbTitle}</BreadcrumbItem>
 				{/if}
@@ -126,7 +141,7 @@
 				<div class="relative hidden md:block">
 					<input
 					 type="text"
-					 placeholder="搜索..."
+					 placeholder={t('nav.search')}
 					 class="w-64 rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 					/>
 					<svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
@@ -147,12 +162,40 @@
 						<span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
 					</span>
 				</button>
+				<!-- 语言切换 -->
+				<button
+				 type="button"
+				 class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+				>
+					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+						 d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+					</svg>
+				</button>
+				<Dropdown class="w-32" placement="bottom">
+					{#each languageOptions as lang}
+						<DropdownItem
+						 onclick={() => handleLanguageChange(lang.value)}
+						 class={getLocale() === lang.value ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20' : ''}
+						>
+							<div class="flex items-center gap-2">
+								{#if getLocale() === lang.value}
+									<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+									</svg>
+								{/if}
+								<span>{lang.label}</span>
+							</div>
+						</DropdownItem>
+					{/each}
+				</Dropdown>
 				<!-- 用户下拉菜单 -->
 				<Dropdown label="" class="w-48">
-					<DropdownItem href="/applications/my">我的申请</DropdownItem>
-					<DropdownItem href="/reports">统计报表</DropdownItem>
-					<DropdownItem>设置</DropdownItem>
-					<DropdownItem class="border-t border-gray-100 text-red-600 dark:border-gray-700">退出登录</DropdownItem>
+					<DropdownItem href="/applications/my">{t('nav.myApplications')}</DropdownItem>
+					<DropdownItem href="/reports">{t('nav.reports')}</DropdownItem>
+					<DropdownItem>{t('nav.settings')}</DropdownItem>
+					<DropdownItem
+					 class="border-t border-gray-100 text-red-600 dark:border-gray-700">{t('nav.logout')}</DropdownItem>
 				</Dropdown>
 			</div>
 		</header>
