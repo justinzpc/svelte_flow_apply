@@ -4,9 +4,51 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
+		<script>
+			// 同步检测语言偏好，避免首屏文字闪烁
+			(function(){
+				var c=localStorage.getItem('app-locale');
+				var l='en';
+				if(c==='zh'||c==='en'){l=c}
+				else{var t=Intl.DateTimeFormat().resolvedOptions().timeZone;
+				if(t&&['Asia/Shanghai','Asia/Chongqing','Asia/Harbin','Asia/Urumqi'].indexOf(t)>=0)l='zh';
+				else if(navigator.language&&navigator.language.startsWith('zh'))l='zh'}
+				document.documentElement.lang=l==='zh'?'zh-CN':'en';
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+		<!-- 首屏骨架屏：150ms 后显示，SvelteKit 水合完成后由 layout 移除 -->
+		<div id="app-skeleton" style="display:none;position:fixed;inset:0;z-index:9999;background:#f3f4f6">
+			<div style="display:flex;height:100%">
+				<div style="width:256px;background:#fff;border-right:1px solid #e5e7eb;padding:24px;flex-shrink:0">
+					<div style="height:36px;width:180px;background:#e5e7eb;border-radius:8px;animation:sk-pulse 1.5s ease-in-out infinite"></div>
+					<div style="margin-top:24px">
+						<div style="height:40px;background:#e5e7eb;border-radius:8px;margin-bottom:12px;animation:sk-pulse 1.5s ease-in-out infinite"></div>
+						<div style="height:40px;background:#e5e7eb;border-radius:8px;margin-bottom:12px;animation:sk-pulse 1.5s ease-in-out infinite;animation-delay:.1s"></div>
+						<div style="height:40px;background:#e5e7eb;border-radius:8px;margin-bottom:12px;animation:sk-pulse 1.5s ease-in-out infinite;animation-delay:.2s"></div>
+						<div style="height:40px;background:#e5e7eb;border-radius:8px;margin-bottom:12px;animation:sk-pulse 1.5s ease-in-out infinite;animation-delay:.3s"></div>
+						<div style="height:40px;background:#e5e7eb;border-radius:8px;animation:sk-pulse 1.5s ease-in-out infinite;animation-delay:.4s"></div>
+					</div>
+				</div>
+				<div style="flex:1;padding:32px;overflow:hidden">
+					<div style="height:28px;width:200px;background:#e5e7eb;border-radius:8px;margin-bottom:8px;animation:sk-pulse 1.5s ease-in-out infinite"></div>
+					<div style="height:16px;width:300px;background:#e5e7eb;border-radius:4px;margin-bottom:32px;animation:sk-pulse 1.5s ease-in-out infinite"></div>
+					<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
+						<div style="height:100px;background:#e5e7eb;border-radius:8px;animation:sk-pulse 1.5s ease-in-out infinite"></div>
+						<div style="height:100px;background:#e5e7eb;border-radius:8px;animation:sk-pulse 1.5s ease-in-out infinite;animation-delay:.1s"></div>
+						<div style="height:100px;background:#e5e7eb;border-radius:8px;animation:sk-pulse 1.5s ease-in-out infinite;animation-delay:.2s"></div>
+						<div style="height:100px;background:#e5e7eb;border-radius:8px;animation:sk-pulse 1.5s ease-in-out infinite;animation-delay:.3s"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<style>@keyframes sk-pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
+		<script>
+			// 150ms 后显示骨架屏（快速连接时用户不会看到）
+			setTimeout(function(){var s=document.getElementById('app-skeleton');if(s)s.style.display='block'},150);
+		</script>
+		<div style="display:contents">%sveltekit.body%</div>
 	</body>
 </html>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as echarts from 'echarts';
+	import echarts from './echarts';
 	import type { Application, ApplicationType } from '$lib/types/application';
 	import { departments, getUserById } from '$lib/data/mock';
 	import { t } from '$lib/i18n/index.svelte';

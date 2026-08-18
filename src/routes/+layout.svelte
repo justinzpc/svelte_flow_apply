@@ -2,14 +2,21 @@
  import './layout.css';
  import {page} from '$app/stores';
  import {afterNavigate} from '$app/navigation';
+ import {onMount} from 'svelte';
  import {Breadcrumb, BreadcrumbItem, Dropdown, DropdownItem} from 'flowbite-svelte';
  import {currentUser} from '$lib/data/mock';
- import {initLocale, t, getLocale, setLocale, type Locale} from '$lib/i18n/index.svelte';
+ import {getLocale, initLocale, type Locale, setLocale, t} from '$lib/i18n/index.svelte';
 
  let {children} = $props();
 
  afterNavigate(() => {
   initLocale();
+ });
+
+ // 水合完成后移除骨架屏
+ onMount(() => {
+  const skeleton = document.getElementById('app-skeleton');
+  if (skeleton) skeleton.remove();
  });
 
  let navItems = $derived([
@@ -41,7 +48,7 @@
  let currentPage = $derived($page.url.pathname);
  let breadcrumbTitle = $derived(getBreadcrumb(currentPage));
 
- const languageOptions: {value: Locale; label: string}[] = [
+ const languageOptions: { value: Locale; label: string }[] = [
   {value: 'zh', label: '中文'},
   {value: 'en', label: 'English'}
  ];
@@ -127,7 +134,7 @@
 	<div class="ml-64 flex flex-1 flex-col">
 		<!-- 顶部导航栏 -->
 		<header
-		 class="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200 bg-white px-6 dark:border-gray-700 dark:bg-gray-800">
+		 class="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200 bg-white px-6 dark:border-gray-700 dark:bg-gray-800 shadow-2xs">
 			<!-- 面包屑 -->
 			<Breadcrumb class="flex-1">
 				<BreadcrumbItem href="/" home>{t('nav.home')}</BreadcrumbItem>
@@ -138,18 +145,6 @@
 			<!-- 右侧操作区 -->
 			<div class="flex items-center gap-4">
 				<!-- 搜索框 -->
-				<div class="relative hidden md:block">
-					<input
-					 type="text"
-					 placeholder={t('nav.search')}
-					 class="w-64 rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-					/>
-					<svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
-					 viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-						 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-					</svg>
-				</div>
 				<!-- 通知按钮 -->
 				<button
 				 class="relative rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
@@ -172,7 +167,7 @@
 						 d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
 					</svg>
 				</button>
-				<Dropdown class="w-32" placement="bottom">
+				<Dropdown class="w-32 list-none" placement="bottom">
 					{#each languageOptions as lang}
 						<DropdownItem
 						 onclick={() => handleLanguageChange(lang.value)}
@@ -190,13 +185,6 @@
 					{/each}
 				</Dropdown>
 				<!-- 用户下拉菜单 -->
-				<Dropdown label="" class="w-48">
-					<DropdownItem href="/applications/my">{t('nav.myApplications')}</DropdownItem>
-					<DropdownItem href="/reports">{t('nav.reports')}</DropdownItem>
-					<DropdownItem>{t('nav.settings')}</DropdownItem>
-					<DropdownItem
-					 class="border-t border-gray-100 text-red-600 dark:border-gray-700">{t('nav.logout')}</DropdownItem>
-				</Dropdown>
 			</div>
 		</header>
 		<!-- 主内容区域 -->

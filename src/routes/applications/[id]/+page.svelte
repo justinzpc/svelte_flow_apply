@@ -1,12 +1,12 @@
 <script lang="ts">
  import {page} from '$app/stores';
- import {Badge, Button, Card, Textarea, Timeline, TimelineItem} from 'flowbite-svelte';
+ import {Badge, Button, Textarea, Timeline, TimelineItem} from 'flowbite-svelte';
  import type {ApplicationType} from '$lib/types/application';
  import {isOvertimeContent, isProcurementContent, isTravelContent, STATUS_CONFIG} from '$lib/types/application';
  import {applicationStore} from '$lib/services/applicationStore.svelte';
  import {currentUser, getDepartmentName, getUserById, getUserName} from '$lib/data/mock';
  import {getAvailableActions} from '$lib/services/stateMachine';
- import {t, formatDateTime} from '$lib/i18n/index.svelte';
+ import {formatDateTime, t} from '$lib/i18n/index.svelte';
 
  let approveComment = $state('');
  let showApproveForm = $state(false);
@@ -162,17 +162,17 @@
 			{/if}
 		</form>
 		<!-- 审批流程时间线 -->
-		<Card>
+		<div>
 			<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">{t('detail.approvalProcess')}</h2>
 			<Timeline>
-				<TimelineItem>
+				<TimelineItem title="" date="">
 					<p class="font-medium text-gray-900 dark:text-white">{t('detail.eventSubmitted')}</p>
 					<p class="text-sm text-gray-500 dark:text-gray-400">
 						{t('detail.eventCreated', {name: getUserName(app.applicantId), date: formatDateTime(app.createdAt)})}
 					</p>
 				</TimelineItem>
 				{#if app.status !== 'draft'}
-					<TimelineItem>
+					<TimelineItem title="" date="">
 						<p class="font-medium text-gray-900 dark:text-white">{t('detail.eventSubmitted')}</p>
 						<p class="text-sm text-gray-500 dark:text-gray-400">
 							{t('detail.eventPending')}
@@ -180,10 +180,13 @@
 					</TimelineItem>
 				{/if}
 				{#if app.status === 'approved' && approver}
-					<TimelineItem>
+					<TimelineItem title="" date="">
 						<p class="font-medium text-green-600">{t('detail.eventApproved')}</p>
 						<p class="text-sm text-gray-500 dark:text-gray-400">
-							{t('detail.eventApprovedBy', {name: approver.name, date: app.approveAt ? formatDateTime(app.approveAt) : ''})}
+							{t('detail.eventApprovedBy', {
+               name: approver.name,
+               date: app.approveAt ? formatDateTime(app.approveAt) : ''
+              })}
 						</p>
 						{#if app.approveComment}
 							<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -192,10 +195,13 @@
 						{/if}
 					</TimelineItem>
 				{:else if app.status === 'rejected' && approver}
-					<TimelineItem>
+					<TimelineItem title="" date="">
 						<p class="font-medium text-red-600">{t('detail.eventRejected')}</p>
 						<p class="text-sm text-gray-500 dark:text-gray-400">
-							{t('detail.eventRejectedBy', {name: approver.name, date: app.approveAt ? formatDateTime(app.approveAt) : ''})}
+							{t('detail.eventRejectedBy', {
+               name: approver.name,
+               date: app.approveAt ? formatDateTime(app.approveAt) : ''
+              })}
 						</p>
 						{#if app.approveComment}
 							<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -204,7 +210,7 @@
 						{/if}
 					</TimelineItem>
 				{:else if app.status === 'cancelled'}
-					<TimelineItem>
+					<TimelineItem title="" date="">
 						<p class="font-medium text-purple-600">{t('detail.eventCancelled')}</p>
 						<p class="text-sm text-gray-500 dark:text-gray-400">
 							{t('detail.eventCancelledBy')}
@@ -212,7 +218,7 @@
 					</TimelineItem>
 				{/if}
 			</Timeline>
-		</Card>
+		</div>
 		<!-- 操作区域 -->
 		{#if availableActions.length > 0}
 			<div>
@@ -220,9 +226,11 @@
 				<div class="flex flex-wrap gap-3">
 					{#each availableActions as action}
 						{#if action.targetStatus === 'approved' || action.targetStatus === 'rejected'}
-							<Button color={action.color} onclick={() => { showApproveForm = true; }}>{t('action.' + action.targetStatus)}</Button>
+							<Button color={action.color}
+							 onclick={() => { showApproveForm = true; }}>{t('action.' + action.targetStatus)}</Button>
 						{:else}
-							<Button color={action.color} onclick={() => handleAction(action.targetStatus)}>{t('action.' + action.targetStatus)}</Button>
+							<Button color={action.color}
+							 onclick={() => handleAction(action.targetStatus)}>{t('action.' + action.targetStatus)}</Button>
 						{/if}
 					{/each}
 				</div>
@@ -232,7 +240,8 @@
 						<div class="flex gap-2">
 							<Button color="blue" onclick={() => handleAction('approved')}>{t('detail.approve')}</Button>
 							<Button color="red" onclick={() => handleAction('rejected')}>{t('detail.reject')}</Button>
-							<Button color="alternative" onclick={() => { showApproveForm = false; approveComment = ''; }}>{t('common.cancel')}
+							<Button color="alternative"
+							 onclick={() => { showApproveForm = false; approveComment = ''; }}>{t('common.cancel')}
 							</Button>
 						</div>
 					</div>
