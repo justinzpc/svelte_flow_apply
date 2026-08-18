@@ -13,7 +13,7 @@
  import type {ApplicationStatus, ApplicationType} from '$lib/types/application';
  import {APPLICATION_TYPES, STATUS_CONFIG} from '$lib/types/application';
  import {applicationStore} from '$lib/services/applicationStore.svelte';
- import {t, formatDate} from '$lib/i18n/index.svelte';
+ import {formatDate, t} from '$lib/i18n/index.svelte';
 
  let filterStatus = $state<ApplicationStatus | ''>('');
  let filterType = $state<ApplicationType | ''>('');
@@ -81,7 +81,7 @@
 						<TableBodyCell class="font-medium text-gray-900 dark:text-white">{app.title}</TableBodyCell>
 						<TableBodyCell>{t('type.' + app.type)}</TableBodyCell>
 						<TableBodyCell>
-							<Badge color={config.color}>{t('status.' + config.label)}</Badge>
+							<Badge color={config.color as any}>{t('status.' + config.label)}</Badge>
 						</TableBodyCell>
 						<TableBodyCell>{formatDate(app.createdAt)}</TableBodyCell>
 						<TableBodyCell>{formatDate(app.updatedAt)}</TableBodyCell>
@@ -97,7 +97,7 @@
 			</TableBody>
 		</Table>
 	</div>
-	<p class="text-sm text-gray-500 dark:text-gray-400">
+	<p class="text-sm dark:text-gray-400">
 		{t('my.totalRecords', {count: myApplications.length})}
 	</p>
 </div>

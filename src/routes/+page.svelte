@@ -50,7 +50,7 @@
 									{formatDate(app.createdAt)}
 								</p>
 							</div>
-							<Badge color={config.color}>{t('status.' + config.label)}</Badge>
+							<Badge color={config.color as any}>{t('status.' + config.label)}</Badge>
 						</div>
 					</div>
 				</a>

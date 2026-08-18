@@ -510,7 +510,7 @@ describe('发起申请页面', () => {
 	// ========== 多语言 buttonText 测试 ==========
 
 	describe('多语言 buttonText', () => {
-		afterEach(() => {
+		beforeEach(() => {
 			setLocale('en');
 		});
 
