@@ -12,7 +12,7 @@
  let showApproveForm = $state(false);
 
  let applicationId = $derived($page.params.id);
- let app = $derived(applicationStore.getById(applicationId));
+ let app = $derived(applicationId ? applicationStore.getById(applicationId) : undefined);
  let applicant = $derived(app ? getUserById(app.applicantId) : undefined);
  let approver = $derived(app?.approverId ? getUserById(app.approverId) : undefined);
  let availableActions = $derived(app ? getAvailableActions(app.status) : []);
@@ -52,7 +52,7 @@
 				<div>
 					<h1 class="text-2xl font-bold text-gray-900 dark:text-white">{app.title}</h1>
 					<div class="mt-1 flex items-center gap-2">
-						<Badge color={config.color}>{t('status.' + config.label)}</Badge>
+						<Badge color={config.color as any}>{t('status.' + config.label)}</Badge>
 						<span class="text-sm text-gray-500 dark:text-gray-400">{t('type.' + typeLabels[app.type])}</span>
 					</div>
 				</div>
