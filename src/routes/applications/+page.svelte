@@ -14,7 +14,7 @@
  import {APPLICATION_TYPES, STATUS_CONFIG} from '$lib/types/application';
  import {applicationStore} from '$lib/services/applicationStore.svelte';
  import {getDepartmentName, getUserById, getUserName} from '$lib/data/mock';
- import {t, formatDate} from '$lib/i18n/index.svelte';
+ import {formatDate, t} from '$lib/i18n/index.svelte';
 
  let filterStatus = $state<ApplicationStatus | ''>('');
  let filterType = $state<ApplicationType | ''>('');
@@ -86,7 +86,7 @@
 						<TableBodyCell>{applicant ? getDepartmentName(applicant.departmentId) : '-'}</TableBodyCell>
 						<TableBodyCell>{t('type.' + app.type)}</TableBodyCell>
 						<TableBodyCell>
-							<Badge color={config.color}>{t('status.' + config.label)}</Badge>
+							<Badge color={config.color as any}>{t('status.' + config.label)}</Badge>
 						</TableBodyCell>
 						<TableBodyCell>{formatDate(app.createdAt)}</TableBodyCell>
 						<TableBodyCell>
